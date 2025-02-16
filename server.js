@@ -8,38 +8,38 @@ app.use(express.json())
 
 const database = {
     users: [
-        // {
-        //     id: "1",
-        //     name: "joshua",
-        //     email: "chengjoshua22@gmail.com",
-        //     password: hashingPw("ayeaye"),
-        //     entries: 0,
-        //     joined: new Date()
-        // },
-        // {
-        //     id: uuidv4(),
-        //     name: "joshua2",
-        //     email: "joshuacheng@gmail.com",
-        //     password: hashingPw("joshua"),
-        //     entries: 0,
-        //     joined: new Date()
-        // },
-        // {
-        //     id: uuidv4(),
-        //     name: "joshua3",
-        //     email: "joshua2210@gmail.com",
-        //     password: hashingPw("ritz"),
-        //     entries: 0,
-        //     joined: new Date()
-        // },
-        // {
-        //     id: uuidv4(),
-        //     name: "joshua4",
-        //     email: "gnehcauhsoj@gmail.com",
-        //     password: hashingPw("reallymissritzsfm"),
-        //     entries: 0,
-        //     joined: new Date()
-        // }
+        {
+            id: "1",
+            name: "joshua",
+            email: "chengjoshua22@gmail.com",
+            password: "ayeaye",
+            entries: 0,
+            joined: new Date()
+        },
+        {
+            id: uuidv4(),
+            name: "joshua2",
+            email: "joshuacheng@gmail.com",
+            password: "joshua",
+            entries: 0,
+            joined: new Date()
+        },
+        {
+            id: uuidv4(),
+            name: "joshua3",
+            email: "joshua2210@gmail.com",
+            password: "ritz",
+            entries: 0,
+            joined: new Date()
+        },
+        {
+            id: uuidv4(),
+            name: "joshua4",
+            email: "gnehcauhsoj@gmail.com",
+            password: "reallymissritzsfm",
+            entries: 0,
+            joined: new Date()
+        }
     ]
 }
 
@@ -100,6 +100,23 @@ function getUserByID(id){
         return user;
     }
     return null;
+}
+
+function initDB() {
+    database.users.forEach((user) => {
+        bcrypt.hash(user.password, null, null, function(err, res) {
+            // Store hash in your password DB.
+            if (err){
+                console.log(err)
+                user.password = ""
+            }
+            if (res){
+                // console.log("res: ", user.password, "-->", res)
+                user.password = res
+            }
+        })
+    })
+    // console.log(database.users)
 }
 
 // routings
@@ -175,6 +192,7 @@ app.post("/register", (req, res) => {
 
 app.listen(3002, () => {
     console.log("app is running on port", port)
+    initDB()
 })
 
 app.get("/profile/:id", (req, res) => {
