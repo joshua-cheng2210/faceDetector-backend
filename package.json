@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
     "react": "^19.0.0",

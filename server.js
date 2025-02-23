@@ -1,10 +1,14 @@
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt-nodejs'
+import cors from 'cors'
 
 const app = express()
-const port = 3002
+const port = 3069
 app.use(express.json())
+app.use(cors({
+    "origin" : "*"
+}))
 
 const database = {
     users: [
@@ -12,7 +16,7 @@ const database = {
             id: "1",
             name: "joshua",
             email: "chengjoshua22@gmail.com",
-            password: "ayeaye",
+            password: "22102003",
             entries: 0,
             joined: new Date()
         },
@@ -140,7 +144,7 @@ app.post("/signin", (req, res) => {
             if (result) {
                 return res.json("login success");
             } else {
-                return res.json("login failed");
+                return res.status(400).json("login failed");
             }
         });
     } else {
@@ -190,7 +194,7 @@ app.post("/register", (req, res) => {
     }
 })
 
-app.listen(3002, () => {
+app.listen(port, () => {
     console.log("app is running on port", port)
     initDB()
 })
