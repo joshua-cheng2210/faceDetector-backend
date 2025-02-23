@@ -135,6 +135,7 @@ app.post("/signin", (req, res) => {
         return res.json("failed to login with appropriate info");
     }
     const user = database.users.find((acc) => acc.email === req.body.email);
+    
     console.log("from signin: ", user)
     if (user) {
         bcrypt.compare(req.body.password, user.password, function(err, result) {
@@ -142,7 +143,9 @@ app.post("/signin", (req, res) => {
                 return res.status(500).json("Error comparing passwords");
             }
             if (result) {
-                return res.json("login success");
+                user["login"] = "success"
+                const { password, ...userWithoutPassword } = user;
+                return res.json(userWithoutPassword);
             } else {
                 return res.status(400).json("login failed");
             }
@@ -176,8 +179,13 @@ app.post("/register", (req, res) => {
                 joined: new Date()
             };
             database.users.push(newAcc);
+            newAcc["register"] = "success"
             // console.log("database.users", database.users);
-            return res.json("register success");
+            
+            const { password, ...userWithoutPassword } = newAcc;
+
+            // Return the new user profile without the password
+            return res.json(userWithoutPassword);
         });
         // sychronous method
         // const newAcc = {
