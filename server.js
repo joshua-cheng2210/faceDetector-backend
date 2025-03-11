@@ -1,3 +1,5 @@
+// to run this on postman, insert this command
+// - npm run start // not npm run dev. we need to use nodemon
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt-nodejs'
