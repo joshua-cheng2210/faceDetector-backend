@@ -4,6 +4,23 @@ import express from 'express'
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt-nodejs'
 import cors from 'cors'
+import knex from 'knex'
+
+const db = knex({
+    client: 'pg',
+    connection: {
+      host: '127.0.0.1',
+      user: 'postgres',
+    //   port: 3069, // or try 5432?
+      port: 5432, // this worked
+      password: '@Jchs22102003',
+    //   password: '',
+      database: 'faceDetector',
+    },
+  });
+db.migrate.latest();
+
+console.log(db.select('*').from("users")) // testingg
 
 const app = express()
 const port = 3069
