@@ -223,7 +223,7 @@ app.get("/profile/:id", (req, res) => {
     // res.json(acc)
 })
 
-app.post("/image", (req, res) => {
+app.put("/image", (req, res) => {
     // console.log("req.body", req.body)
     // console.log("req.param", req.params)
     const { id } = req.body
