@@ -104,59 +104,59 @@ function checkHashPw(entry, hash){
 }
 
 // server utility functions
-function isInDatabase(email, pw = ""){
-    console.log("printing from isInDatabase", email, pw)
-    const user = database.users.find((acc) => {
-        console.log(acc.password)
-        if (acc.email === email && pw === "") {
-            return true
-        } else bcrypt.compare(pw, acc.password, function(err, res) {
-            if (err){
-                return false
-            } 
-            if (res){
-                return true
-            }
-        });
-        // return (acc.email === email && checkHashPw(pw, acc.password)) === true || (acc.email === email && pw === "");
-    });
-    return user !== undefined;
-}
+// function isInDatabase(email, pw = ""){
+//     console.log("printing from isInDatabase", email, pw)
+//     const user = database.users.find((acc) => {
+//         console.log(acc.password)
+//         if (acc.email === email && pw === "") {
+//             return true
+//         } else bcrypt.compare(pw, acc.password, function(err, res) {
+//             if (err){
+//                 return false
+//             } 
+//             if (res){
+//                 return true
+//             }
+//         });
+//         // return (acc.email === email && checkHashPw(pw, acc.password)) === true || (acc.email === email && pw === "");
+//     });
+//     return user !== undefined;
+// }
 
-function getUserByID(id){
-    const user = database.users.find((acc) => {
-        // console.log(acc)
-        return acc.id === id
-    });
-    if (user) {
-        // console.log(user);
-        return user;
-    }
-    return null;
-}
+// function getUserByID(id){
+//     const user = database.users.find((acc) => {
+//         // console.log(acc)
+//         return acc.id === id
+//     });
+//     if (user) {
+//         // console.log(user);
+//         return user;
+//     }
+//     return null;
+// }
 
 function initDB() {
-    database.users.forEach((user) => {
-        bcrypt.hash(user.password, null, null, function(err, res) {
-            // Store hash in your password DB.
-            if (err){
-                console.log(err)
-                user.password = ""
-            }
-            if (res){
-                // console.log("res: ", user.password, "-->", res)
-                user.password = res
-            }
-        })
-    })
-    // console.log(database.users)
-}
+//     database.users.forEach((user) => {
+//         bcrypt.hash(user.password, null, null, function(err, res) {
+//             // Store hash in your password DB.
+//             if (err){
+//                 console.log(err)
+//                 user.password = ""
+//             }
+//             if (res){
+//                 // console.log("res: ", user.password, "-->", res)
+//                 user.password = res
+//             }
+//         })
+//     })
+//     // console.log(database.users)
+// }
 
 // routings
-app.get("/", (req, res) => {
-    // res.send("home is working")
-    db.select("*").from("users")
-})
+// app.get("/", (req, res) => {
+//     // res.send("home is working")
+//     db.select("*").from("users")
+// })
 
 app.post("/signin", (req, res) => {
     console.log("req.body", req.body);
@@ -279,7 +279,7 @@ app.post("/register", (req, res) => {
 
 app.listen(port, () => {
     console.log("app is running on port", port)
-    initDB()
+    // initDB()
 })
 
 app.get("/profile/:id", (req, res) => {
