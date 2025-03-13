@@ -20,7 +20,17 @@ const db = knex({
   });
 db.migrate.latest();
 
-console.log(db.select('*').from("users")) // testingg
+//testing
+// db.insert({
+//     "id": 1, 
+//     "name" : "josh", 
+//     "email" : "chengjoshuaa22@gmail.com",
+//     "entries" : 0,
+//     "joined" : new Date()
+// }).into("users")
+
+// let testingDB = db.select('*').from("users").then(data => {console.log(data)})
+// console.log("testingDB: ", testingDB) // testingg
 
 const app = express()
 const port = 3069
@@ -145,80 +155,126 @@ function initDB() {
 // routings
 app.get("/", (req, res) => {
     // res.send("home is working")
-    res.json(database.users)
+    db.select("*").from("users")
 })
 
 app.post("/signin", (req, res) => {
     console.log("req.body", req.body);
+    const {email, password} = req.body
     if (req.body.email === "" || req.body.password === "") {
         return res.json("failed to login with appropriate info");
     }
-    const user = database.users.find((acc) => acc.email === req.body.email);
     
-    console.log("from signin: ", user)
-    if (user) {
-        bcrypt.compare(req.body.password, user.password, function(err, result) {
-            if (err) {
-                return res.status(500).json("Error comparing passwords");
-            }
-            if (result) {
-                user["login"] = "success"
-                const { password, ...userWithoutPassword } = user;
-                return res.json(userWithoutPassword);
-            } else {
-                return res.status(400).json("login failed");
-            }
-        });
-    } else {
-        return res.json("login failed");
-    }
+    db.select("email", "hash").from("login").where(
+        "email", "=", email
+    ).then(data => {
+        console.log(data)
+        const isValid = bcrypt.compareSync(password, data[0].hash)
+        if (isValid){
+            db.select("*").from("users").where("email", "=", email).then(user => {
+                return res.json(user[0])
+            }).catch(() => {
+                return res.status(400).json("login failed")
+            })
+        } else{
+            return res.status(400).json("login failed")
+        }
+    }).catch(() => {
+        return res.status(400).json("login failed")
+    })
+
+    // const user = database.users.find((acc) => acc.email === req.body.email);
+    
+    // console.log("from signin: ", user)
+    // if (user) {
+    //     bcrypt.compare(req.body.password, user.password, function(err, result) {
+    //         if (err) {
+    //             return res.status(500).json("Error comparing passwords");
+    //         }
+    //         if (result) {
+    //             user["login"] = "success"
+    //             const { password, ...userWithoutPassword } = user;
+    //             return res.json(userWithoutPassword);
+    //         } else {
+    //             return res.status(400).json("login failed");
+    //         }
+    //     });
+    // } else {
+    //     return res.json("login failed");
+    // }
 });
 
 app.post("/register", (req, res) => {
-    console.log("req.body", req.body)
+    console.log("/register --> req.body", req.body)
+    const {email, name, password} = req.body
     if (req.body.email === "" || req.body.password === ""){
-        return res.json("failed to register with appropriate info")
+        return res.json("unable to register")
     }
-    let found = isInDatabase(req.body.email);
-    
-    if (found) {
-        return res.json("register failed. This Email has been registered with an account")
-    } else {
-        // async design
-        bcrypt.hash(req.body.password, null, null, function(err, hash) {
-            if (err) {
-                return res.status(500).json("Error hashing password");
-            }
-            const newAcc = {
-                id: uuidv4(),
-                name: req.body.name || "defaultName_shyGuy69", // You can set a default name if not provided
-                email: req.body.email,
-                password: hash, // Store the hashed password
-                entries: 0,
-                joined: new Date()
-            };
-            database.users.push(newAcc);
-            newAcc["register"] = "success"
-            // console.log("database.users", database.users);
-            
-            const { password, ...userWithoutPassword } = newAcc;
 
-            // Return the new user profile without the password
-            return res.json(userWithoutPassword);
-        });
-        // sychronous method
-        // const newAcc = {
-        //     id: uuidv4(),
-        //     name: req.body.name || "defaultName_shyGuy69", // You can set a default name if not provided
-        //     email: req.body.email,
-        //     password: hashingPw(req.body.password),
-        //     entries: 0,
-        //     joined: new Date()
-        // };
-        // database.users.push(newAcc);
-        // console.log("database.users", database.users)
-        // return res.json("register success");
-    }
+    const hash = bcrypt.hashSync(password)
+    db.transaction(trx => {
+        trx.insert({
+            hash: hash,
+            email: email
+        }).into("login").returning("email").then(loginEmail => {
+            // console.log(loginEmail)
+            trx("users").returning('*').insert({
+                email: loginEmail[0].email,
+                name: name,
+                joined: new Date()
+            }).then(response => {
+                // console.log("printing response: ", response)
+                return res.json(response[0])
+            }).catch(_ => res.status(400).json("unable to register"))
+        }).then(trx.commit).catch(() => {
+            trx.rollback
+            return res.status(400).json("unable to register")
+        })
+    })
+    // using postgress for the first time here 
+    
+    // TODO: return to sign in page if successful
+
+    // let found = isInDatabase(req.body.email);
+    
+    // if (found) {
+    //     return res.json("register failed. This Email has been registered with an account")
+    // } else {
+    //     // async design
+    //     bcrypt.hash(req.body.password, null, null, function(err, hash) {
+    //         if (err) {
+    //             return res.status(500).json("Error hashing password");
+    //         }
+    //         const newAcc = {
+    //             id: uuidv4(),
+    //             name: req.body.name || "defaultName_shyGuy69", // You can set a default name if not provided
+    //             email: req.body.email,
+    //             password: hash, // Store the hashed password
+    //             entries: 0,
+    //             joined: new Date()
+    //         };
+    //         database.users.push(newAcc);
+    //         newAcc["register"] = "success"
+    //         // console.log("database.users", database.users);
+            
+    //         const { password, ...userWithoutPassword } = newAcc;
+
+    //         // Return the new user profile without the password
+    //         return res.json(userWithoutPassword);
+    //     });
+    //     // sychronous method
+    //     // const newAcc = {
+    //     //     id: uuidv4(),
+    //     //     name: req.body.name || "defaultName_shyGuy69", // You can set a default name if not provided
+    //     //     email: req.body.email,
+    //     //     password: hashingPw(req.body.password),
+    //     //     entries: 0,
+    //     //     joined: new Date()
+    //     // };
+    //     // database.users.push(newAcc);
+    //     // console.log("database.users", database.users)
+    //     // return res.json("register success");
+    // }
 })
 
 app.listen(port, () => {
@@ -230,13 +286,23 @@ app.get("/profile/:id", (req, res) => {
     // console.log("req.body", req.body)
     console.log("req.param", req.params)
     const { id } = req.params
-    const acc = getUserByID(id)
-    // console.log("acc in the listening", acc)
-    if (acc){
-        return res.json(acc)
-    } else {
-        return res.status(404).json("no such user")
-    }
+    db.select("*").from("users").where({
+        id: id
+    }).then(response => {
+        console.log("printing get users: ", response, "response.length: ", response.length)
+        if (response.length != 1){
+            return res.status(400).json("unable to get profile")
+        }
+        return res.json(response)
+    }).catch(_ => res.status(400).json("unable to get profile"))
+
+    // const acc = getUserByID(id)
+    // // console.log("acc in the listening", acc)
+    // if (acc){
+    //     return res.json(acc)
+    // } else {
+    //     return res.status(404).json("no such user")
+    // }
     // res.json(acc)
 })
 
@@ -245,14 +311,32 @@ app.put("/image", (req, res) => {
     // console.log("req.param", req.params)
     const { id } = req.body
     // console.log("id: ", id, typeof(id))
-    const acc = getUserByID(id)
+    db("users").where({
+        id: id
+    }).increment("entries", 1).returning("entries").then(data => {
+        // console.log(data)
+        return res.json(data[0])
+    }).catch(err => {
+        return res.json("failed to update rank")
+    })
+    
+    // .then(response => {
+    //     console.log("printing get users: ", response, "response.length: ", response.length)
+    //     if (!response.length){
+    //         return res.status(400).json("unable to get profile")
+    //     }
+    //     return res.json(response)
+    // }).catch(_ => res.status(400).json("unable to get profile"))
+    // const acc = getUserByID(id)
+
+
     // console.log("acc in the listening", acc)
-    if (acc){
-        acc.entries += 1
-        return res.json(acc.entries)
-    } else {
-        return res.status(404).json("no such user")
-    }
+    // if (acc){
+    //     acc.entries += 1
+    //     return res.json(acc.entries)
+    // } else {
+    //     return res.status(404).json("no such user")
+    // }
     // res.json(acc)
 })
 
