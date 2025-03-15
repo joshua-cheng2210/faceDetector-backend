@@ -1,7 +1,6 @@
 // to run this on postman, insert this command
 // - npm run start // not npm run dev. we need to use nodemon
 import express from 'express'
-import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt-nodejs'
 import cors from 'cors'
 import knex from 'knex'
@@ -74,7 +73,7 @@ app.post("/register", (req, res) => {
                 joined: new Date()
             }).then(response => {
                 return res.json(response[0])
-            }).catch(_ => res.status(400).json("unable to register"))
+            }).catch(() => {res.status(400).json("unable to register")})
         }).then(trx.commit).catch(() => {
             trx.rollback
             return res.status(400).json("unable to register")
@@ -97,7 +96,7 @@ app.get("/profile/:id", (req, res) => {
             return res.status(400).json("unable to get profile")
         }
         return res.json(response)
-    }).catch(_ => res.status(400).json("unable to get profile"))
+    }).catch(() => {res.status(400).json("unable to get profile")})
 
 })
 
@@ -108,7 +107,7 @@ app.put("/image", (req, res) => {
     }).increment("entries", 1).returning("entries").then(data => {
         // console.log(data)
         return res.json(data[0])
-    }).catch(err => {
+    }).catch(() => {
         return res.json("failed to update rank")
     })
 })
