@@ -161,42 +161,6 @@ const getClarifyRequest = ((imageURL) => {
     return requestOptions
 })
 
-const getBoundingBoxes = (regions) => { // regions = result.outputs[0].data.regions
-    console.log("regions")
-    let BoundingBoxes_f = [];
-
-    regions.forEach(region => {
-      // Accessing and rounding the bounding box values
-      const inputIMG = document.getElementById("inputImage")
-      const width = Number(inputIMG.width)
-      const height = Number(inputIMG.height)
-      const boundingBox = region.region_info.bounding_box;
-      // TODO: might need to look into this calculations later
-      const topRow = boundingBox.top_row.toFixed(3);
-      const leftCol = boundingBox.left_col.toFixed(3);
-      const bottomRow = boundingBox.bottom_row.toFixed(3);
-      const rightCol = boundingBox.right_col.toFixed(3);
-
-      region.data.concepts.forEach(concept => {
-          // Accessing and rounding the concept value
-          const name = concept.name;
-          const value = concept.value.toFixed(4);
-
-          // console.log(`${name}: ${value} BBox: ${topRow}, ${leftCol}, ${bottomRow}, ${rightCol}`);
-          const box = {
-            "concept.name": concept.name, 
-            "concept.value": concept.value.toFixed(4),
-            "topRow": topRow,
-            "leftCol": leftCol,
-            "bottomRow": bottomRow,
-            "rightCol": rightCol
-          };
-          BoundingBoxes_f.push(box);
-      });
-    //   this.setState({boundingBox: BoundingBoxes_f})
-    });
-}
-
 app.post("/promptingClarifai", (req, res) => {
     // https://www.shutterstock.com/image-photo/happy-businessman-enjoying-home-office-600nw-2257033579.jpg
     console.log("req.body: ", req.body)
@@ -211,8 +175,8 @@ app.post("/promptingClarifai", (req, res) => {
         return response.json()
     }).then(data => {
         // console.log("\n\n------------------------\n\n")
-        console.log("data: ", data);
-        console.log("\n\ndata.status.code: ", data.status.code);
+        // console.log("data: ", data);
+        console.log("data.status.code: ", data.status.code);
         // console.log("\n\ndata.outputs[0].regions: ", data.outputs[0].data.regions);
         // console.log("\n\ndata.outputs[0].regions.region_info: ", data.outputs[0].data.regions[0].region_info);
         // console.log("\n\ndata.outputs[0].regions.data: ", data.outputs[0].data.regions[0].data);
