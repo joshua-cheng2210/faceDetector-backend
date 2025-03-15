@@ -23,7 +23,8 @@ const app = express()
 const port = 3069
 app.use(express.json())
 app.use(cors({
-    "origin" : "http://localhost:5173"
+    // "origin" : "http://localhost:5173"
+    "origin" : "*"
 }))
 app.use(bodyParser.json());
 
@@ -211,10 +212,12 @@ app.post("/promptingClarifai", (req, res) => {
     }).then(data => {
         // console.log("\n\n------------------------\n\n")
         console.log("data: ", data);
-        console.log("\n\ndata.outputs[0].regions: ", data.outputs[0].data.regions);
-        console.log("\n\ndata.outputs[0].regions.region_info: ", data.outputs[0].data.regions[0].region_info);
-        console.log("\n\ndata.outputs[0].regions.data: ", data.outputs[0].data.regions[0].data);
-        return res.status(200).json(data.outputs[0].data.regions);
+        console.log("\n\ndata.status.code: ", data.status.code);
+        // console.log("\n\ndata.outputs[0].regions: ", data.outputs[0].data.regions);
+        // console.log("\n\ndata.outputs[0].regions.region_info: ", data.outputs[0].data.regions[0].region_info);
+        // console.log("\n\ndata.outputs[0].regions.data: ", data.outputs[0].data.regions[0].data);
+        
+        res.status(200).json(data);
     }).catch(error => {
         // console.log("\n\n---------------there is an error----------\n\n")
         console.log('error', error)
