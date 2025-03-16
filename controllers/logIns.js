@@ -29,7 +29,7 @@ export const handleSignIn = (req, res, db, bcrypt) => {
 export const handleRegister = (req, res, db, bcrypt) => {
     // console.log("/register --> req.body", req.body)
     const {email, name, password} = req.body
-    if (req.body.email === "" || req.body.password === ""){
+    if (email === "" || password === ""){
         return res.json("unable to register")
     }
 
