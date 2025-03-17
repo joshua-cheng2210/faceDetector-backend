@@ -12,17 +12,24 @@ import { getProfile, updateUserRank, getoutput } from './controllers/appUtilitie
 const db = knex({
     client: 'pg',
     connection: {
-      host: '127.0.0.1',
-      user: 'postgres',
-      port: 5432,
-      password: '@Jchs22102003',
-      database: 'faceDetector',
+      // host: '127.0.0.1',
+      // user: 'postgres',
+      // port: 5432,
+      // password: '@Jchs22102003',
+      // database: 'faceDetector',
+      connectionString : process.env.RENDER_URL,
+      ssl: { rejectUnauthorized: false },
+      host: process.env.RENDER_HOSTNAME,
+      port: process.env.RENDER_PORT,
+      user: process.env.RENDER_USERNAME,
+      password: process.env.RENDER_PW,
+      database: process.env.RENDER_DB
     },
 });
 db.migrate.latest();
 
 const app = express()
-const port = 3069
+const port = process.env.port || 3069
 app.use(express.json())
 app.use(cors({
     // "origin" : "http://localhost:5173"
@@ -35,10 +42,15 @@ app.post("/signin", (req, res) => {return handleSignIn(req, res, db, bcrypt)});
 
 app.post("/register", (req, res) => {return handleRegister(req, res, db, bcrypt)})
 
-app.listen(port, () => {console.log("app is running on port", port)})
-
 app.get("/profile/:id", (req, res) => {return getProfile(req, res, db)})
 
 app.put("/image", (req, res) => {return updateUserRank(req, res, db)})
 
 app.post("/promptingClarifai", (req, res) => {return getoutput(req, res)})
+
+app.listen(port, () => {console.log("app is running on port", port)})
+
+// console.log("performance: ", performance)
+// console.log("process.env: ", process.env.port)
+// console.log("process.env: ", process.env.password)
+// console.log("process.env: ", process.env.user)

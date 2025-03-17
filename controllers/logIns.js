@@ -3,7 +3,7 @@ export const handleSignIn = (req, res, db, bcrypt) => {
     // console.log("req.body", req.body);
     const {email, password} = req.body
     if (req.body.email === "" || req.body.password === "") {
-        return res.json("failed to login with appropriate info");
+        return res.status(400).json("failed to login with appropriate info");
     }
     
     db.select("email", "hash").from("login").where(
@@ -30,7 +30,7 @@ export const handleRegister = (req, res, db, bcrypt) => {
     // console.log("/register --> req.body", req.body)
     const {email, name, password} = req.body
     if (email === "" || password === ""){
-        return res.json("unable to register")
+        return res.status(400).json("unable to register")
     }
 
     const hash = bcrypt.hashSync(password)

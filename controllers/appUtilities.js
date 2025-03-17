@@ -24,8 +24,6 @@ export const updateUserRank = (req, res, db) => {
     })
 }
 
-
-const PAT = '1165295fdb9c481aacbfc38c59efc702';
 const USER_ID = 'chen7647';
 const APP_ID = 'my-first-application-ddxi3q';
 const MODEL_ID = 'face-detection';
