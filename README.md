@@ -48,3 +48,12 @@ docker build -t facedetector-backend .  ;docker tag facedetector-backend:latest 
 ```
 - go to https://dashboard.render.com/web/srv-d0mcv70gjchc738eb1s0/deploys/dep-d0mj8hbuibrs73eojftg
 - click Manual deploy >> deploy latest reference
+
+# future development ideas:
+- implement some data colections
+- introduce more Clarifai models too (not just face detection)
+- look into some security protection for the backend (look into the cors policy instead of using "*" and sql injection prevention)
+- have osme CI/CD pipelining for the backend and frontend (maybe use github actions)
+- maybe host through AWS or GCP
+- Input Validation: Implement more thorough server-side validation for all incoming data (e.g., using a library like Joi or express-validator) beyond basic checks.
+- write some unit test fo the backend and run these tests in the CI/CD pipeline
