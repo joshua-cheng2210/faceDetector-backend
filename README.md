@@ -12,4 +12,15 @@ CREATE TABLE users (
     joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+# for future developments deployments:
+- docker build -t facedetector-backend .
+- docker tag facedetector-backend:latest joshua2210/facedetector-backend:latest
+- docker push joshua2210/facedetector-backend:latest
+- or do this one liner command:
+```bash
+docker build -t facedetector-backend .  ;docker tag facedetector-backend:latest joshua2210/facedetector-backend:latest;docker push joshua2210/facedetector-backend:latest;
+```
+- go to https://dashboard.render.com/web/srv-d0mcv70gjchc738eb1s0/deploys/dep-d0mj8hbuibrs73eojftg
+- click Manual deploy >> deploy latest reference
+
 # learnings

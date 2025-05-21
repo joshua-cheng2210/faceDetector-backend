@@ -68,6 +68,7 @@ export const getoutput = (req, res) => {
     const { imgURL } = req.body
 
     const requestOptions = getClarifyRequest(imgURL);
+    console.log("requestOptions: ", requestOptions)
     const url = "https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID  + "/outputs";
 
     fetch(url, requestOptions)
@@ -77,10 +78,14 @@ export const getoutput = (req, res) => {
     }).then(data => {
         // console.log("\n\n------------------------\n\n")
         // console.log("data: ", data);
-        console.log("data.status.code: ", data.status.code);
-        // console.log("\n\ndata.outputs[0].regions: ", data.outputs[0].data.regions);
-        // console.log("\n\ndata.outputs[0].regions.region_info: ", data.outputs[0].data.regions[0].region_info);
-        // console.log("\n\ndata.outputs[0].regions.data: ", data.outputs[0].data.regions[0].data);
+        // console.log("data.status.code: ", data.status.code);
+        // if (data.status.code !== 10000){
+        //     return res.status(400).json("failed to get the output")
+        // } else {
+        //     console.log("\n\ndata.outputs[0].regions: ", data.outputs[0].data.regions);
+        //     console.log("\n\ndata.outputs[0].regions.region_info: ", data.outputs[0].data.regions[0].region_info);
+        //     console.log("\n\ndata.outputs[0].regions.data: ", data.outputs[0].data.regions[0].data);
+        // }
         
         res.status(200).json(data);
     }).catch(error => {
