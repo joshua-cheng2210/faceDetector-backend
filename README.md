@@ -12,9 +12,11 @@
     - using express to set up the server and handle routing
 - hosting through render.com
     - setting up the backend hosting
+        - https://dashboard.render.com/web/srv-d0mcv70gjchc738eb1s0/deploys/dep-d0mk0h3uibrs73ep5l9g?r=2025-05-21%4002%3A52%3A57%7E2025-05-21%4002%3A55%3A28
         - through creating a docker image for scalaility
         - using render's environmental variables to set up the DB connection. and using process.env to access the environmental variables in my server.js
     - setting up the DB hosting
+        - https://dashboard.render.com/d/dpg-d0md2hmmcj7s739757fg-a/info
         - using knex for DB migrations (for interacting with the DB)
         - using pgAdmin for DB management UI or visualizing the DB
 - Docker
