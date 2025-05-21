@@ -5,6 +5,8 @@ import bcrypt from 'bcrypt-nodejs'
 import cors from 'cors'
 import knex from 'knex'
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
 import { handleSignIn, handleRegister } from './controllers/logIns.js'
 import { getProfile, updateUserRank, getoutput } from './controllers/appUtilities.js'
@@ -19,11 +21,11 @@ const db = knex({
       // database: 'faceDetector',
       connectionString : process.env.RENDER_URL,
       ssl: { rejectUnauthorized: false },
+      database: process.env.RENDER_DB,
       host: process.env.RENDER_HOSTNAME,
       port: process.env.RENDER_PORT,
-      user: process.env.RENDER_USERNAME,
       password: process.env.RENDER_PW,
-      database: process.env.RENDER_DB
+      user: process.env.RENDER_USERNAME,
     },
 });
 db.migrate.latest();

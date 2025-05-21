@@ -1,8 +1,15 @@
-# React + Vite
+# sql tables
+CREATE TABLE login (
+    id SERIAL PRIMARY KEY,
+    hash VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    entries BIGINT DEFAULT 0,
+    joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# learnings

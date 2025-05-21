@@ -50,9 +50,9 @@ const getClarifyRequest = ((imageURL) => {
     const requestOptions = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            // 'Accept': 'application/json',
-            'Authorization': 'Key ' + PAT,
+            // 'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Key ' + process.env.API_CLARIFAI_PAT,
             // 'Access-Control-Allow-Origin' : "*",
             // "origin" : "*"
         },
