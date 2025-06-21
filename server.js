@@ -31,7 +31,8 @@ const db = knex({
 db.migrate.latest();
 
 const app = express()
-const port = process.env.port || 3069
+// Use PORT environment variable if supplied (common in hosting platforms)
+const port = process.env.PORT || 3069
 app.use(express.json())
 app.use(cors({
     // "origin" : "http://localhost:5173"
@@ -54,5 +55,3 @@ app.listen(port, () => {console.log("app is running on port", port)})
 
 // console.log("performance: ", performance)
 // console.log("process.env: ", process.env.port)
-// console.log("process.env: ", process.env.password)
-// console.log("process.env: ", process.env.user)
